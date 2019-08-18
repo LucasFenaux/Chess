@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     screen = pygame.display.set_mode(size)
 
-    pawn = pygame.image.load("../Display/Black Rook.png")
+    pawn = pygame.image.load("../Display/Black Bishop.png")
     ballrect = pawn.get_rect()
     BackGround = Background('../Display/Board.png', [0, 0])
     while 1:

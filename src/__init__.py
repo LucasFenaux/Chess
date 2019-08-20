@@ -16,23 +16,17 @@ if __name__ == '__main__':
     black = 0, 0, 0
 
     screen = pygame.display.set_mode(size)
-
-    rook = Knight([0, 0], 'white')
+    screen.fill(black)
+    BackGround = Board(screen)
+    rook = Rook([0, 0], 'white', BackGround)
     ballrect = rook.rect
-    BackGround = Board()
+    print(BackGround.grid)
+    rook.move([1, 0])
+    print(BackGround.grid)
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
-
-        ballrect = ballrect.move(speed)
-        if ballrect.left < 0 or ballrect.right > width:
-            speed[0] = -speed[0]
-        if ballrect.top < 0 or ballrect.bottom > height:
-            speed[1] = -speed[1]
-
-        screen.fill(black)
-        screen.blit(BackGround.image, BackGround.rect)
-        screen.blit(rook.image, ballrect)
+            BackGround.display_pieces()
         pygame.display.flip()
 
 

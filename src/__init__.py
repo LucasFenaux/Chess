@@ -1,21 +1,11 @@
 import pygame
 import sys
-
-
-class Ship(pygame.sprite.Sprite):
-    def __init__(self, image_file, speed, location):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image_file)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
-
-
-class Background(pygame.sprite.Sprite):
-    def __init__(self, image_file, location):
-        pygame.sprite.Sprite.__init__(self)  # call Sprite initializer
-        self.image = pygame.image.load(image_file)
-        self.rect = self.image.get_rect()
-        self.rect.left, self.rect.top = location
+from Piece import Piece
+from Board import Board
+from Pawn import Pawn
+from Rook import Rook
+from Bishop import Bishop
+from Knight import Knight
 
 
 if __name__ == '__main__':
@@ -27,9 +17,9 @@ if __name__ == '__main__':
 
     screen = pygame.display.set_mode(size)
 
-    pawn = pygame.image.load("../Display/Black Bishop.png")
-    ballrect = pawn.get_rect()
-    BackGround = Background('../Display/Board.png', [0, 0])
+    rook = Knight([0, 0], 'white')
+    ballrect = rook.rect
+    BackGround = Board()
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
@@ -42,7 +32,7 @@ if __name__ == '__main__':
 
         screen.fill(black)
         screen.blit(BackGround.image, BackGround.rect)
-        screen.blit(pawn, ballrect)
+        screen.blit(rook.image, ballrect)
         pygame.display.flip()
 
 

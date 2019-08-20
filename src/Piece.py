@@ -1,4 +1,5 @@
 import pygame
+from Custom_Exceptions import IllegalMoveError
 
 
 class Piece(pygame.sprite.Sprite):
@@ -14,7 +15,8 @@ class Piece(pygame.sprite.Sprite):
             self.location = board_location
             self.board.add_piece(self)
         else:
-            raise
+            raise IllegalMoveError(
+                "Can't spawn this piece at " + str(board_location) + " because another piece is already there")
 
     def update_location(self, new_location):
         self.board.remove_piece(self)

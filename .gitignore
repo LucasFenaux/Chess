@@ -5,3 +5,7 @@
 .idea/vcs.xml
 .idea/workspace.xml
 .idea/misc.xml
+*.pyc
+*.pyc
+src/__pycache__/Board.cpython-37.pyc
+src/__pycache__/Piece.cpython-37.pyc

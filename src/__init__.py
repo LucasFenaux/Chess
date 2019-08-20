@@ -20,9 +20,7 @@ if __name__ == '__main__':
     BackGround = Board(screen)
     rook = Rook([0, 0], 'white', BackGround)
     ballrect = rook.rect
-    print(BackGround.grid)
     rook.move([1, 0])
-    print(BackGround.grid)
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()

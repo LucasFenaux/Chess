@@ -11,7 +11,7 @@ class Board(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = [0, 0]
         self.size = screen.get_size()
         self.grid = [[None] * 8 for _ in range(8)]
-        screen.blit(self.image, self.rect)
+        self.display_board()
 
     def is_square_empty(self, location):
         if self.grid[location[0]][location[1]] is None:
@@ -25,8 +25,14 @@ class Board(pygame.sprite.Sprite):
     def remove_piece(self, piece):
         self.grid[piece.location[0]][piece.location[1]] = None
 
+    def update_board(self):
+        self.display_board()
+        self.display_pieces()
+
+    def display_board(self):
+        self.screen.blit(self.image, (0, 0))
+
     def display_pieces(self):
-        self.screen.blit(self.image, self.rect)
         for i in range(8):
             for k in range(8):
                 if self.grid[i][k] is not None:

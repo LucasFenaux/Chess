@@ -44,4 +44,4 @@ class Piece(pygame.sprite.Sprite):
             return False
 
     def display(self):
-        self.board.screen.blit(self.image, self.rect)
+        self.board.screen.blit(self.image, (self.rect.left, self.rect.top))

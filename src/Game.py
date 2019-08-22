@@ -16,14 +16,8 @@ class Game:
     def start(self):
         self.display_game()
         grid = self.board.get_grid()
-        # if grid[0][0].get_piece() is not None: print(grid[0][0].get_piece().get_square().get_location())
-        print("-----------------------------------")
         piece = Piece(grid[0][0], 'white', self.board)
-        # if grid[0][0].get_piece() is not None: print(grid[0][0].get_piece().get_square().get_location())
         piece.move(grid[1][0])
-        print("-----------------------------------")
-        # if grid[1][0].get_piece() is not None: print(grid[1][0].get_piece().get_square().get_location())
-        # if grid[0][0].get_piece() is not None: print(grid[0][0].get_piece().get_square().get_location())
         self.board.update_board()
         self.display_game()
         i = 0

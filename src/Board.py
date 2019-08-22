@@ -12,7 +12,6 @@ class Board(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = [0, 0]
         self.size = screen.get_size()
         self.grid = self.fill_grid_with_empty_squares()
-        self.display_board()
 
     def is_square_occupied(self, location):
         return self.grid[location[0]][location[1]].is_occupied()

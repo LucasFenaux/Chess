@@ -32,9 +32,8 @@ class Piece(pygame.sprite.Sprite):
             return False
 
     def display(self):
-        rect = self.square.get_rect()
-        print([rect.left, rect.top])
-        self.board.screen.blit(self.image, (rect.left, rect.top))
+        rect = self.square.get_screen_position()
+        self.board.screen.blit(self.image, rect)
 
     def get_color(self):
         return self.color

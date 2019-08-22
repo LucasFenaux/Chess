@@ -7,11 +7,8 @@ class Square(pygame.sprite.Sprite):
         self.board = board
         self.location = location
         self.piece = piece
-        self.rect = pygame.rect
-        self.rect.left, self.rect.top = [location[0] * int(self.board.get_size()[0] / 8),
-                                         location[1] * int(self.board.get_size()[1] / 8)]
-
-        print([self.rect.left, self.rect.top])
+        square_size = int(self.board.get_size()[1] / 8)
+        self.rect = pygame.Rect(location[0] * square_size, location[1] * square_size, square_size, square_size)
 
     def is_occupied(self):
         if self.piece is None:
@@ -33,3 +30,6 @@ class Square(pygame.sprite.Sprite):
 
     def get_rect(self):
         return self.rect
+
+    def get_screen_position(self):
+        return (self.rect.left, self.rect.top)

@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import os
 import ctypes
-from Game import Game
+from RegularGame import RegularGame
 
 
 black = 0, 0, 0
@@ -17,16 +17,16 @@ def microsoft_set_up():
     return screensize
 
 
-def start_game():
+def start_regular_game():
     pygame.init()
     background_screen_size = microsoft_set_up()
     background_screen = pygame.display.set_mode(screen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
     background_screen.fill(black)
     screen = background_screen.copy()
     background_screen = pygame.display.set_mode(background_screen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-    game = Game(background_screen, screen)
+    game = RegularGame(background_screen, screen)
     game.start()
 
 
 if __name__ == '__main__':
-    start_game()
+    start_regular_game()

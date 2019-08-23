@@ -1,13 +1,12 @@
 import pygame
 from pygame.locals import *
 import sys
-from Piece import Piece
+import random
 from Board import Board
+from PieceFactory import PieceFactory
 
-from Rook import Rook
 
-
-class Game:
+class RegularGame:
     def __init__(self, background_screen, screen):
         self.background_screen = background_screen
         self.board = Board(screen)
@@ -18,6 +17,14 @@ class Game:
     def display_game(self):
         self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
                                     (0, 0))
+
+    def populate_game(self):
+        piece_factory = PieceFactory(self.board)
+        i = random.uniform(0, 1)
+        if i < 0.5:
+            piece_factory.populate_regular_game_wb()
+        else:
+            piece_factory.populate_regular_game_bb()
 
     def handle_click(self, first_click):
         pos = pygame.mouse.get_pos()
@@ -41,9 +48,8 @@ class Game:
                       self.board.get_size()[1] / self.background_screen.get_size()[1])
 
     def start(self):
+        self.populate_game()
         self.display_game()
-        grid = self.board.get_grid()
-        Rook(grid[0][0], 'white', self.board)
         self.board.update_board()
         self.display_game()
         while 1:

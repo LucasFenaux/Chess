@@ -6,6 +6,6 @@ class Queen(Piece):
     def __init__(self, board_square, color, board):
         Piece.__init__(self, board_square, color, board)
         if color == 'black':
-            self.image = pygame.image.load("../Display/Black Queen.png")
+            self.image = pygame.image.load("../Display/Black King.png")
         else:
-            self.image = pygame.image.load("../Display/White Queen.png")
+            self.image = pygame.image.load("../Display/White King.png")

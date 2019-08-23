@@ -14,6 +14,7 @@ class Square(pygame.sprite.Sprite):
         if self.piece is None:
             return False
         else:
+            print(self.piece)
             return True
 
     """replaces the piece at this square with the given new_piece and returns the removed piece"""

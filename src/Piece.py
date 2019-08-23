@@ -6,10 +6,6 @@ class Piece(pygame.sprite.Sprite):
     def __init__(self, board_square, color, board):
         if not board_square.is_occupied():
             pygame.sprite.Sprite.__init__(self)
-            # if color == 'black':
-            #     self.image = pygame.image.load("../Display/Black Pawn.png")
-            # else:
-            #     self.image = pygame.image.load("../Display/White Pawn.png")
             self.color = color
             self.board = board
             self.square = board_square

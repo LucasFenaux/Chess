@@ -13,17 +13,20 @@ class PieceFactory:
         self.board = board
 
     def create_piece(self, piece, square, color):
-        switcher = {
-            "Pawn": Pawn(square, color, self.board),
-            "Rook": Rook(square, color, self.board),
-            "Bishop": Bishop(square, color, self.board),
-            "Knight": Knight(square, color, self.board),
-            "Queen": Queen(square, color, self.board),
-            "King": King(square, color, self.board)
-        }
-        created_piece = switcher.get(piece, None)
-        print(created_piece)
-        return created_piece
+        if piece == "Pawn":
+            return Pawn(square, color, self.board)
+        elif piece == "Rook":
+            return Rook(square, color, self.board)
+        elif piece == "Bishop":
+            return Bishop(square, color, self.board)
+        elif piece == "Knight":
+            return Knight(square, color, self.board)
+        elif piece == "Queen":
+            return Queen(square, color, self.board)
+        elif piece == "King":
+            return King(square, color, self.board)
+        else:
+            return None
 
     def populate_regular_game_wb(self):
         grid = self.board.get_grid()

@@ -9,6 +9,8 @@ class Square(pygame.sprite.Sprite):
         self.piece = piece
         square_size = int(self.board.get_size()[1] / 8)
         self.rect = pygame.Rect(location[0] * square_size, location[1] * square_size, square_size, square_size)
+        self.highlighted = False
+        self.highlight_color = None
 
     def is_occupied(self):
         if self.piece is None:
@@ -22,6 +24,22 @@ class Square(pygame.sprite.Sprite):
         previous_piece = self.piece
         self.piece = new_piece
         return previous_piece
+
+    def highlight(self, selected_or_move):
+        if not self.highlighted:
+            if selected_or_move == 'selected':
+                self.highlight_color = (0, 0, 255)
+                self.highlighted = True
+            elif selected_or_move == 'move':
+                self.highlight_color = (0, 128, 0)
+
+    def un_highlight(self):
+        self.highlighted = False
+        self.highlight_color = None
+
+    def display_highlight(self):
+        if self.highlighted and self.highlight_color is not None:
+            pygame.draw.rect(self.board.get_screen(), self.highlight_color, self.rect, 1)
 
     def get_piece(self):
         return self.piece

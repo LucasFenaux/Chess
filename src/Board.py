@@ -25,6 +25,7 @@ class Board(pygame.sprite.Sprite):
     def update_board(self):
         self.display_board()
         self.display_pieces()
+        self.display_highlighted()
 
     def display_board(self):
         self.screen.blit(self.image, (0, 0))
@@ -34,6 +35,11 @@ class Board(pygame.sprite.Sprite):
             for k in range(8):
                 if self.grid[i][k].get_piece() is not None:
                     self.grid[i][k].get_piece().display()
+
+    def display_highlighted(self):
+        for square in self.get_squares():
+            if square.highlighted:
+                square.display_highlight()
 
     def fill_grid_with_empty_squares(self):
         grid = [[None] * 8 for _ in range(8)]
@@ -47,6 +53,9 @@ class Board(pygame.sprite.Sprite):
 
     def get_grid(self):
         return self.grid
+
+    def get_screen(self):
+        return self.screen
 
     def get_squares(self):
         all_squares= []

@@ -36,10 +36,13 @@ class RegularGame:
             if square.rect.collidepoint(scaled_pos):
                 selected_square = square
                 break
+        # first click of the turn
         if self.state == 0 and is_down:
             if selected_square.get_piece() is not None and selected_square.get_piece().get_color() == self.turn:
                 self.first_selected_square = selected_square
+                self.first_selected_square.highlight('selected')
                 self.state = 1
+        # going up after the first click, which leads to either a drag or nothing
         elif self.state == 1 and not is_down:
             if selected_square != self.first_selected_square:
                 moved = self.first_selected_square.get_piece().move(selected_square)
@@ -50,15 +53,22 @@ class RegularGame:
                         self.turn = 'black'
                     else:
                         self.turn = 'white'
-                self.state = 0
+                    self.state = 0
+                    self.first_selected_square.un_highlight()
             else:
                 self.state = 2
+        # the second click of the turn/process, right now do nothing because we act only when the player releases the
+        # button (this allows to add something at this moment, maybe coloring
         elif self.state == 2 and is_down:
             self.state = 3
+        # the release of the second click
         elif self.state == 3 and not is_down:
+            # the player clicked again on the same piece -> unselect it
             if self.first_selected_square == selected_square:
+                self.first_selected_square.un_highlight()
                 self.first_selected_square = None
                 self.state = 0
+            # move
             else:
                 moved = self.first_selected_square.get_piece().move(selected_square)
                 if not moved:
@@ -68,7 +78,8 @@ class RegularGame:
                         self.turn = 'black'
                     else:
                         self.turn = 'white'
-                self.state = 0
+                    self.state = 0
+                    self.first_selected_square.un_highlight()
 
     def update_background_size(self, new_size):
         self.background_screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)

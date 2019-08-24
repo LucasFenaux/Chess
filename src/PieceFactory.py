@@ -1,5 +1,3 @@
-import pygame
-from Piece import Piece
 from Pawn import Pawn
 from Rook import Rook
 from Bishop import Bishop

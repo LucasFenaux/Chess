@@ -15,6 +15,7 @@ class RegularGame:
         self.state = 0
         self.scale = (screen.get_size()[0] / self.background_screen.get_size()[0],
                       screen.get_size()[1] / self.background_screen.get_size()[1])
+        self.game_orientation = ""
 
     def display_game(self):
         self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
@@ -25,8 +26,10 @@ class RegularGame:
         i = random.uniform(0, 1)
         if i < 0.5:
             piece_factory.populate_regular_game_wb()
+            self.game_orientation = "wb"
         else:
             piece_factory.populate_regular_game_bb()
+            self.game_orientation = "bb"
 
     def handle_click(self, is_down):
         pos = pygame.mouse.get_pos()
@@ -45,7 +48,7 @@ class RegularGame:
         # going up after the first click, which leads to either a drag or nothing
         elif self.state == 1 and not is_down:
             if selected_square != self.first_selected_square:
-                moved = self.first_selected_square.get_piece().move(selected_square)
+                moved = self.first_selected_square.get_piece().move(selected_square, self.game_orientation)
                 if not moved:
                     print("invalid move, failed to move")
                 else:
@@ -70,7 +73,7 @@ class RegularGame:
                 self.state = 0
             # move
             else:
-                moved = self.first_selected_square.get_piece().move(selected_square)
+                moved = self.first_selected_square.get_piece().move(selected_square, self.game_orientation)
                 if not moved:
                     print("invalid move, failed to move")
                 else:

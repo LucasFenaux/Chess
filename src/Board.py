@@ -57,7 +57,7 @@ class Board(pygame.sprite.Sprite):
         return self.screen
 
     def get_squares(self):
-        all_squares= []
+        all_squares = []
         for i in range(8):
             for j in range(8):
                 all_squares.append(self.grid[i][j])

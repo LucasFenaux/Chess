@@ -24,12 +24,12 @@ class RegularGame:
     def populate_game(self):
         piece_factory = PieceFactory(self.board)
         i = random.uniform(0, 1)
-        if i < 0.5:
-            piece_factory.populate_regular_game_wb()
-            self.game_orientation = "wb"
-        else:
-            piece_factory.populate_regular_game_bb()
-            self.game_orientation = "bb"
+        # if i < 0.5:
+        piece_factory.populate_regular_game_wb()
+        self.game_orientation = "wb"
+        # else:
+        #     piece_factory.populate_regular_game_bb()
+        #     self.game_orientation = "bb"
 
     def handle_click(self, is_down):
         pos = pygame.mouse.get_pos()
@@ -49,6 +49,7 @@ class RegularGame:
         elif self.state == 1 and not is_down:
             if selected_square != self.first_selected_square:
                 moved = self.first_selected_square.get_piece().move(selected_square, self.game_orientation)
+                print(moved)
                 if not moved:
                     print("invalid move, failed to move")
                 else:
@@ -83,6 +84,7 @@ class RegularGame:
                         self.turn = 'white'
                     self.state = 0
                     self.first_selected_square.un_highlight()
+                    self.first_selected_square = None
 
     def update_background_size(self, new_size):
         self.background_screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)

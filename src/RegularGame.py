@@ -9,13 +9,15 @@ from PieceFactory import PieceFactory
 class RegularGame:
     def __init__(self, background_screen, screen):
         self.background_screen = background_screen
-        self.board = Board(screen)
+        self.board = Board(screen, self)
         self.first_selected_square = None
         self.turn = 'white'
         self.state = 0
         self.scale = (screen.get_size()[0] / self.background_screen.get_size()[0],
                       screen.get_size()[1] / self.background_screen.get_size()[1])
         self.game_orientation = ""
+        self.white_pieces_taken = []
+        self.black_pieces_taken = []
 
     def display_game(self):
         self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
@@ -85,6 +87,14 @@ class RegularGame:
                     self.state = 0
                     self.first_selected_square.un_highlight()
                     self.first_selected_square = None
+
+    def take_piece(self, piece):
+        if piece.get_color() == "black":
+            self.black_pieces_taken.append(piece)
+        else:
+            self.white_pieces_taken.append(piece)
+        print(self.white_pieces_taken)
+        print(self.black_pieces_taken)
 
     def update_background_size(self, new_size):
         self.background_screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)

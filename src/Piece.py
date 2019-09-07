@@ -22,10 +22,12 @@ class Piece(pygame.sprite.Sprite):
         self.square.replace(self)
 
     def check_if_move_is_valid(self, new_square, game_orientation):
-        return True
+        return {"valid": True, "piece taken": None}
 
     def move(self, new_square, game_orientation):
-        if self.check_if_move_is_valid(new_square, game_orientation):
+        test_move = self.check_if_move_is_valid(new_square, game_orientation)
+        if test_move["valid"]:
+            self.board.handle_piece_taken(test_move.get("piece taken", None))
             self.update_location(new_square)
             return True
         else:

@@ -3,7 +3,7 @@ from Square import Square
 
 
 class Board(pygame.sprite.Sprite):
-    def __init__(self, screen):
+    def __init__(self, screen, game):
         pygame.sprite.Sprite.__init__(self)
         self.screen = screen
         self.image = pygame.image.load("../Display/Board.png")
@@ -11,15 +11,16 @@ class Board(pygame.sprite.Sprite):
         self.rect.left, self.rect.top = [0, 0]
         self.size = screen.get_size()
         self.grid = self.fill_grid_with_empty_squares()
+        self.game = game
 
     def is_square_occupied(self, location):
         return self.grid[location[0]][location[1]].is_occupied()
 
-    def add_piece(self, piece):
-        self.grid[piece.location[0]][piece.location[1]].replace(piece)
+    def add_piece(self, piece, square):
+        self.grid[square.get_location()[0]][square.get_location()[1]].replace(piece)
 
-    def remove_piece(self, piece):
-        self.grid[piece.location[0]][piece.location[1]].replace(None)
+    def remove_piece(self, square):
+        self.grid[square.get_location()[0]][square.get_location()[1]].replace(None)
 
     def update_board(self):
         self.display_board()
@@ -46,6 +47,11 @@ class Board(pygame.sprite.Sprite):
             for j in range(8):
                 grid[i][j] = Square(self, [i, j], None)
         return grid
+
+    def handle_piece_taken(self, piece):
+        if piece is not None:
+            self.game.take_piece(piece)
+            self.remove_piece(piece.get_square())
 
     def get_size(self):
         return self.size

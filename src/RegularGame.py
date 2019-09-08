@@ -7,7 +7,7 @@ from PieceFactory import PieceFactory
 
 
 class RegularGame:
-    def __init__(self, background_screen, screen):
+    def __init__(self, background_screen, screen, player1, player2):
         self.background_screen = background_screen
         self.board = Board(screen, self)
         self.first_selected_square = None
@@ -16,8 +16,8 @@ class RegularGame:
         self.scale = (screen.get_size()[0] / self.background_screen.get_size()[0],
                       screen.get_size()[1] / self.background_screen.get_size()[1])
         self.game_orientation = ""
-        self.white_pieces_taken = []
-        self.black_pieces_taken = []
+        self.player1 = player1
+        self.player2 = player2
 
     def display_game(self):
         self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
@@ -29,9 +29,13 @@ class RegularGame:
         if i < 0.5:
             piece_factory.populate_regular_game_wb()
             self.game_orientation = "wb"
+            self.player1.set_game(self, "white")
+            self.player2.set_game(self, "black")
         else:
             piece_factory.populate_regular_game_bb()
             self.game_orientation = "bb"
+            self.player1.set_game(self, "black")
+            self.player2.set_game(self, "white")
 
     def handle_click(self, is_down):
         pos = pygame.mouse.get_pos()
@@ -88,10 +92,10 @@ class RegularGame:
                     self.first_selected_square = None
 
     def take_piece(self, piece):
-        if piece.get_color() == "black":
-            self.black_pieces_taken.append(piece)
+        if piece.get_color() == self.player1.get_current_color():
+            self.player2.take_piece(piece)
         else:
-            self.white_pieces_taken.append(piece)
+            self.player1.take_piece(piece)
 
     def update_background_size(self, new_size):
         self.background_screen = pygame.display.set_mode(new_size, HWSURFACE | DOUBLEBUF | RESIZABLE)

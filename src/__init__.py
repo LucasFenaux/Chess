@@ -3,6 +3,7 @@ from pygame.locals import *
 import os
 import ctypes
 from RegularGame import RegularGame
+from Player import Player
 
 
 black = 0, 0, 0
@@ -24,7 +25,9 @@ def start_regular_game():
     background_screen.fill(black)
     screen = background_screen.copy()
     background_screen = pygame.display.set_mode(background_screen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-    game = RegularGame(background_screen, screen)
+    player1 = Player("player1")
+    player2 = Player("player2")
+    game = RegularGame(background_screen, screen, player1, player2)
     game.start()
 
 

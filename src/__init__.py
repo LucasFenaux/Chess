@@ -12,7 +12,7 @@ screen_size = (1024, 1024)
 def microsoft_set_up():
     os.environ['SDL_VIDEO_CENTERED'] = '1'  # centers the window
     user32 = ctypes.windll.user32
-    screensize = (int(user32.GetSystemMetrics(0) - user32.GetSystemMetrics(0) / 8),
+    screensize = (int(user32.GetSystemMetrics(0) - user32.GetSystemMetrics(0) / 4),  # proper proportions
                   int(user32.GetSystemMetrics(1) - user32.GetSystemMetrics(1) / 8))  # leaves some breathing room
     return screensize
 

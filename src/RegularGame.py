@@ -51,7 +51,6 @@ class RegularGame:
         elif self.state == 1 and not is_down:
             if selected_square != self.first_selected_square:
                 moved = self.first_selected_square.get_piece().move(selected_square, self.game_orientation)
-                print(moved)
                 if not moved:
                     print("invalid move, failed to move")
                 else:

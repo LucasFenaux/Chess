@@ -6,6 +6,39 @@ class Player:
         self.name = name
         self.current_game_info = {"current game": None, "current color": "", "pieces taken": []}
         self.num_of_wins = 0
+        self.attackable_squares = []
+        self.king = None  # a pointer to the player's king piece
+
+    def update_attackable_squares(self):
+        grid = self.current_game_info.get("current game", None).board.get_grid()
+        attackable_squares = []
+        for i in range(8):
+            for j in range(8):
+                square = grid[i][j]
+                if square.get_piece() is not None and square.get_piece().get_color() == self.current_game_info.get(
+                                                                                        "current color", ""):
+                    square.get_piece().update_attackable_squares()
+                    for att in square.get_piece().get_attackable_squares():
+                        if att not in attackable_squares:
+                            attackable_squares.append(att)
+        self.attackable_squares = attackable_squares
+
+    # noinspection PyUnresolvedReferences
+    def check_if_in_check(self):
+        game = self.current_game_info.get("current game", None)
+        if game is not None:
+            if self == game.player1:
+                other_player = game.player2
+            else:
+                other_player = game.player1
+            other_player.update_attackable_squares()
+            if king.square in game.other_player.attackable_squares:
+                return True
+            else:
+                return False
+        else:
+            print("Coudn't get the game's information")
+            return False
 
     def set_game(self, game, color):
         self.current_game_info["current game"] = game

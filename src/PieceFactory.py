@@ -22,7 +22,12 @@ class PieceFactory:
         elif piece == "Queen":
             return Queen(square, color, self.board)
         elif piece == "King":
-            return King(square, color, self.board)
+            king = King(square, color, self.board)
+            if self.board.game.player1.get_current_color() == color:
+                self.board.game.player1.king = king
+            else:
+                self.board.game.player2.king = king
+            return king
         else:
             return None
 

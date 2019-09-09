@@ -20,6 +20,12 @@ class Knight(Piece):
         # check if the move follows a valid pattern
         for action in possible_actions:
             if (loc[0] + action[0], loc[1] + action[1]) == (new_loc[0], new_loc[1]):
-                return {"valid": True, "piece taken": new_square.get_piece()}
+                # now we check if this moves does not put the king in check or if it does not take him out of check
+                # if not then it is not valid
+                simulated_data = self.simulate_move(new_square)
+                if simulated_data.get("in check"):
+                    return {"valid": False, "piece taken": None}
+                else:
+                    return {"valid": True, "piece taken": new_square.get_piece()}
         # if we reach here, it means the move was not in the allowed list of patterns
         return {"valid": False, "piece taken": None}

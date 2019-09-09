@@ -32,6 +32,7 @@ class Square(pygame.sprite.Sprite):
                 self.highlighted = True
             elif selected_or_move == 'move':
                 self.highlight_color = (0, 128, 0)
+                self.highlighted = True
 
     def un_highlight(self):
         self.highlighted = False

@@ -37,5 +37,10 @@ class Rook(Piece):
             return {"valid": False, "piece taken": None}
         # if we reach here, it means that the move is in a line and there is no blocking piece and the desired square
         # is obtainable by the rook
-        return {"valid": True, "piece taken": new_square.get_piece()}
-
+        # now we check if this moves does not put the king in check or if it does not take him out of check
+        # if not then it is not valid
+        simulated_data = self.simulate_move(new_square)
+        if simulated_data.get("in check"):
+            return {"valid": False, "piece taken": None}
+        else:
+            return {"valid": True, "piece taken": new_square.get_piece()}

@@ -41,6 +41,7 @@ class RegularGame:
         pos = pygame.mouse.get_pos()
         scaled_pos = (int(pos[0] * self.scale[0]), int(pos[1] * self.scale[1]))
         selected_square = None
+        grid = self.board.get_grid()
         for square in self.board.get_squares():
             if square.rect.collidepoint(scaled_pos):
                 selected_square = square
@@ -50,6 +51,7 @@ class RegularGame:
             if selected_square.get_piece() is not None and selected_square.get_piece().get_color() == self.turn:
                 self.first_selected_square = selected_square
                 self.first_selected_square.highlight('selected')
+                self.first_selected_square.get_piece().highlight_all_attackable_squares()
                 self.state = 1
         # going up after the first click, which leads to either a drag or nothing
         elif self.state == 1 and not is_down:
@@ -63,7 +65,11 @@ class RegularGame:
                     else:
                         self.turn = 'white'
                     self.state = 0
-                    self.first_selected_square.un_highlight()
+                    # self.first_selected_square.un_highlight()
+                    # self.first_selected_square.un_highlight_all_attackable_squares()
+                    for i in range(8):
+                        for j in range(8):
+                            grid[i][j].un_highlight()
             else:
                 self.state = 2
         # the second click of the turn/process, right now do nothing because we act only when the player releases the
@@ -74,7 +80,10 @@ class RegularGame:
         elif self.state == 3 and not is_down:
             # the player clicked again on the same piece -> unselect it
             if self.first_selected_square == selected_square:
-                self.first_selected_square.un_highlight()
+                # self.first_selected_square.un_highlight()
+                for i in range(8):
+                    for j in range(8):
+                        grid[i][j].un_highlight()
                 self.first_selected_square = None
                 self.state = 0
             # move
@@ -88,7 +97,10 @@ class RegularGame:
                     else:
                         self.turn = 'white'
                     self.state = 0
-                    self.first_selected_square.un_highlight()
+                    # self.first_selected_square.un_highlight()
+                    for i in range(8):
+                        for j in range(8):
+                            grid[i][j].un_highlight()
                     self.first_selected_square = None
 
     def take_piece(self, piece):

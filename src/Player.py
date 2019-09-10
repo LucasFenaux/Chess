@@ -8,7 +8,7 @@ class Player:
         self.attackable_squares = []
         self.king = None  # a pointer to the player's king piece
 
-    def update_attackable_squares(self):
+    def update_attackable_squares(self, is_simulated):
         grid = self.current_game_info.get("current game", None).board.get_grid()
         attackable_squares = []
         for i in range(8):
@@ -16,22 +16,22 @@ class Player:
                 square = grid[i][j]
                 if square.get_piece() is not None and square.get_piece().get_color() == self.current_game_info.get(
                                                                                         "current color", ""):
-                    square.get_piece().update_attackable_squares()
+                    square.get_piece().update_attackable_squares(is_simulated)
                     for att in square.get_piece().get_attackable_squares():
                         if att not in attackable_squares:
                             attackable_squares.append(att)
         self.attackable_squares = attackable_squares
 
     # noinspection PyUnresolvedReferences
-    def check_if_in_check(self):
+    def check_if_in_check(self, is_simulated):
         game = self.current_game_info.get("current game", None)
         if game is not None:
             if self == game.player1:
                 other_player = game.player2
             else:
                 other_player = game.player1
-            other_player.update_attackable_squares()
-            if king.square in game.other_player.attackable_squares:
+            other_player.update_attackable_squares(is_simulated)
+            if self.king.square in other_player.attackable_squares:
                 return True
             else:
                 return False

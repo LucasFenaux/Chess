@@ -1,5 +1,5 @@
 import pygame
-import copy
+from Square import Square
 from Custom_Exceptions import IllegalMoveError
 
 
@@ -23,42 +23,56 @@ class Piece(pygame.sprite.Sprite):
         self.square = new_square
         self.square.replace(self)
 
-    def check_if_move_is_valid(self, new_square, game_orientation):
+    def check_if_move_is_valid(self, new_square, game_orientation, is_simulated):
         return {"valid": False, "piece taken": None}
 
     def simulate_move(self, new_square):
         new_loc = new_square.get_location()
-        loc = self.square.get_location()
-        game_copy = copy.deepcopy(self.board.game)
-        grid_copy = game_copy.board.get_grid()
-        copied_piece = grid_copy[loc[0]][loc[1]].get_piece()
-        grid_copy[loc[0]][loc[1]].replace(None)
-        # force the move, we assume that the simulation is used with a valid move (up to the king check check)
-        grid_copy[new_loc[0]][new_loc[1]].replace(copied_piece)
-        color = copied_piece.get_color()
-        if game_copy.player1.color == color:
-            if game_copy.player1.check_if_in_check():
-                return {"in check": True}
+        cur_square = self.square
+        loc = cur_square.get_location()
+        changes_made = []  # list of dictionaries that store what pieces were changed and what was their original position
+        changes_made.append({"square": new_square, "original loc": new_loc})
+        changes_made.append({"square": cur_square, "original loc": loc})
+        game = self.board.game
+        grid = self.board.get_grid()
+        # force the move by moving square around
+        grid[new_loc[0]][new_loc[1]] = cur_square
+        cur_square.location = new_loc
+        filling_square = Square(self.board, loc, None)
+        grid[loc[0]][loc[1]] = filling_square
+        color = cur_square.get_piece().get_color()
+        # check if the player is in check
+        if game.player1.get_current_color() == color:
+            if game.player1.check_if_in_check(True):
+                in_check = {"in check": True}
             else:
-                return {"in check": False}
+                in_check = {"in check": False}
         else:
-            if game_copy.player2.check_if_in_check():
-                return {"in check": True}
+            if game.player2.check_if_in_check(True):
+                in_check = {"in check": True}
             else:
-                return {"in check": False}
+                in_check = {"in check": False}
+        # put everything back in its place
+        for change in changes_made:
+            square = change.get("square", None)
+            loc = change.get("original loc", [0, 0])
+            square.location = loc
+            grid[loc[0]][loc[1]] = square
 
-    def update_attackable_squares(self):
+        return in_check
+
+    def update_attackable_squares(self, is_simulated):
         attackable_squares = []
         grid = self.board.get_grid()
         for i in range(8):
             for j in range(8):
-                test_move = self.check_if_move_is_valid(grid[i][j], self.board.game.game_orientation)
+                test_move = self.check_if_move_is_valid(grid[i][j], self.board.game.game_orientation, is_simulated)
                 if test_move.get("valid", False):
                     attackable_squares.append(grid[i][j])
         self.attackable_squares = attackable_squares
 
     def highlight_all_attackable_squares(self):
-        self.update_attackable_squares()
+        self.update_attackable_squares(False)
         for square in self.attackable_squares:
             square.highlight("move")
 
@@ -70,7 +84,7 @@ class Piece(pygame.sprite.Sprite):
         return self.attackable_squares
 
     def move(self, new_square, game_orientation):
-        test_move = self.check_if_move_is_valid(new_square, game_orientation)
+        test_move = self.check_if_move_is_valid(new_square, game_orientation, False)
         if test_move["valid"]:
             self.board.handle_piece_taken(test_move.get("piece taken", None))
             self.update_location(new_square)

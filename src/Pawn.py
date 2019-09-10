@@ -11,24 +11,27 @@ class Pawn(Piece):
             self.image = pygame.image.load("../Display/White Pawn.png")
         self.has_moved = False
 
-    def check_if_move_is_valid(self, new_square, game_orientation):
+    def check_if_move_is_valid(self, new_square, game_orientation, is_simulated):
         if game_orientation == "wb":
-            return self.check_for_move(new_square, "black", "white")
+            return self.check_for_move(new_square, "black", "white", is_simulated)
         elif game_orientation == "bb":
-            return self.check_for_move(new_square, "white", "black")
+            return self.check_for_move(new_square, "white", "black", is_simulated)
 
-    def check_for_move(self, new_square, color1, color2):
+    def check_for_move(self, new_square, color1, color2, is_simulated):
         new_loc = new_square.get_location()
         loc = self.square.get_location()
         grid = self.board.get_grid()
         if self.color == color1:
             if (new_loc[0], new_loc[1]) == (loc[0], loc[1] + 1):  # move forward by 1 square
                 if new_square.get_piece() is None:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
                 else:
                     return {"valid": False, "piece taken": None}
             elif (new_loc[0], new_loc[1]) == (
@@ -40,43 +43,55 @@ class Pawn(Piece):
                 elif grid[loc[0]][loc[1] + 1].get_piece() is not None:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] + 1):  # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color1:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] + 1):  # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color1:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             else:
                 return {"valid": False, "piece taken": None}
         else:
             if (new_loc[0], new_loc[1]) == (loc[0], loc[1] - 1):  # move forward by 1 square
                 if new_square.get_piece() is None:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
                 else:
                     return {"valid": False, "piece taken": None}
             elif (new_loc[0], new_loc[1]) == (
@@ -88,33 +103,42 @@ class Pawn(Piece):
                 elif grid[loc[0]][loc[1] - 1].get_piece() is not None:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] - 1):  # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color2:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] - 1):  # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color2:
                     return {"valid": False, "piece taken": None}
                 else:
-                    simulated_data = self.simulate_move(new_square)
-                    if simulated_data.get("in check"):
-                        return {"valid": False, "piece taken": None}
-                    else:
+                    if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
+                    else:
+                        simulated_data = self.simulate_move(new_square)
+                        if simulated_data.get("in check"):
+                            return {"valid": False, "piece taken": None}
+                        else:
+                            return {"valid": True, "piece taken": new_square.get_piece()}
             else:
                 return {"valid": False, "piece taken": None}
 

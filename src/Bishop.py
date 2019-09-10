@@ -10,7 +10,7 @@ class Bishop(Piece):
         else:
             self.image = pygame.image.load("../Display/White Bishop.png")
 
-    def check_if_move_is_valid(self, new_square, game_orientation):
+    def check_if_move_is_valid(self, new_square, game_orientation, is_simulated):
         new_loc = new_square.get_location()
         loc = self.square.get_location()
         grid = self.board.get_grid()
@@ -44,8 +44,11 @@ class Bishop(Piece):
         # if we reach here, it means that there is no piece blocking the bishop and hence his move is valid
         # now we check if this moves does not put the king in check or if it does not take him out of check, if not
         # then it is not valid
-        simulated_data = self.simulate_move(new_square)
-        if simulated_data.get("in check"):
-            return {"valid": False, "piece taken": None}
-        else:
+        if is_simulated:
             return {"valid": True, "piece taken": new_square.get_piece()}
+        else:
+            simulated_data = self.simulate_move(new_square)
+            if simulated_data.get("in check"):
+                return {"valid": False, "piece taken": None}
+            else:
+                return {"valid": True, "piece taken": new_square.get_piece()}

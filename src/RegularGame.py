@@ -27,15 +27,15 @@ class RegularGame:
         piece_factory = PieceFactory(self.board)
         i = random.uniform(0, 1)
         if i < 0.5:
-            piece_factory.populate_regular_game_wb()
             self.game_orientation = "wb"
             self.player1.set_game(self, "white")
             self.player2.set_game(self, "black")
+            piece_factory.populate_regular_game_wb()
         else:
-            piece_factory.populate_regular_game_bb()
             self.game_orientation = "bb"
             self.player1.set_game(self, "black")
             self.player2.set_game(self, "white")
+            piece_factory.populate_regular_game_bb()
 
     def handle_click(self, is_down):
         pos = pygame.mouse.get_pos()

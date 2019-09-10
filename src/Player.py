@@ -32,11 +32,14 @@ class Player:
                 other_player = game.player1
             other_player.update_attackable_squares(is_simulated)
             if self.king.square in other_player.attackable_squares:
+                self.king.square.highlight("in check")
                 return True
             else:
+                self.king.square.un_highlight()
                 return False
         else:
             print("Coudn't get the game's information")
+            self.king.square.un_highlight()
             return False
 
     def set_game(self, game, color):

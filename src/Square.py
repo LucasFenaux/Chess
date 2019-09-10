@@ -25,13 +25,16 @@ class Square(pygame.sprite.Sprite):
         self.piece = new_piece
         return previous_piece
 
-    def highlight(self, selected_or_move):
+    def highlight(self, type):
         if not self.highlighted:
-            if selected_or_move == 'selected':
+            if type == 'selected':
                 self.highlight_color = (0, 0, 255)
                 self.highlighted = True
-            elif selected_or_move == 'move':
+            elif type == 'move':
                 self.highlight_color = (0, 128, 0)
+                self.highlighted = True
+            elif type == 'in check':
+                self.highlight_color = (255, 0, 0)
                 self.highlighted = True
 
     def un_highlight(self):

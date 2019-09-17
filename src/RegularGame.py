@@ -114,9 +114,6 @@ class RegularGame:
         self.scale = (self.board.get_size()[0] / self.background_screen.get_size()[0],
                       self.board.get_size()[1] / self.background_screen.get_size()[1])
 
-    def end_game(self, player):
-        pass
-
     def start(self):
         self.populate_game()
         self.display_game()
@@ -124,13 +121,44 @@ class RegularGame:
         self.display_game()
         while 1:
             if self.player1.is_in_checkmate(False):
-                self.end_game(self.player2)
-                print("{} won".format(self.player2.name))
+                player = self.player2
                 break
             elif self.player2.is_in_checkmate(False):
-                self.end_game(self.player1)
-                print("{} won".format(self.player1.name))
+                player = self.player1
                 break
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                    elif event.type == VIDEORESIZE:
+                        new_size = event.dict['size']
+                        self.update_background_size(new_size)
+                    elif event.type == MOUSEBUTTONDOWN:
+                        self.handle_click(True)
+                    elif event.type == MOUSEBUTTONUP:
+                        self.handle_click(False)
+                    self.board.update_board()
+                    self.display_game()
+                pygame.display.flip()
+        print("{} won".format(player.name))
+        self.end_game(player)
+
+    def display_end_game_screen(self, player):
+        end_game_font = pygame.font.SysFont('Comic Sans MS', 30)
+        text_screen = end_game_font.render(
+            '{} won! Congratulations! He has {} consecutive wins'.format(player.name, player.num_of_wins), False,
+            (0, 0, 0))
+        screen = self.board.screen
+        size = screen.get_size()
+        self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
+                                    (0, 0))
+
+    def handle_end_game_click(self, is_down):
+        pass
+
+    def end_game(self, player):
+        while 1:
+            self.display_end_game_screen(player)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -138,10 +166,7 @@ class RegularGame:
                     new_size = event.dict['size']
                     self.update_background_size(new_size)
                 elif event.type == MOUSEBUTTONDOWN:
-                    self.handle_click(True)
+                    self.handle_end_game_click(True)
                 elif event.type == MOUSEBUTTONUP:
-                    self.handle_click(False)
-                self.board.update_board()
-                self.display_game()
-            pygame.display.flip()
-        sys.exit()
+                    self.handle_end_game_click(False)
+            self.display_end_game_screen(player)

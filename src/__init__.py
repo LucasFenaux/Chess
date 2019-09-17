@@ -20,6 +20,7 @@ def microsoft_set_up():
 
 def start_regular_game():
     pygame.init()
+    pygame.font.init()
     background_screen_size = microsoft_set_up()
     background_screen = pygame.display.set_mode(screen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
     background_screen.fill(black)

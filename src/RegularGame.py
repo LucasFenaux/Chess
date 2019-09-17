@@ -114,12 +114,23 @@ class RegularGame:
         self.scale = (self.board.get_size()[0] / self.background_screen.get_size()[0],
                       self.board.get_size()[1] / self.background_screen.get_size()[1])
 
+    def end_game(self, player):
+        pass
+
     def start(self):
         self.populate_game()
         self.display_game()
         self.board.update_board()
         self.display_game()
         while 1:
+            if self.player1.is_in_checkmate(False):
+                self.end_game(self.player2)
+                print("{} won".format(self.player2.name))
+                break
+            elif self.player2.is_in_checkmate(False):
+                self.end_game(self.player1)
+                print("{} won".format(self.player1.name))
+                break
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -133,3 +144,4 @@ class RegularGame:
                 self.board.update_board()
                 self.display_game()
             pygame.display.flip()
+        sys.exit()

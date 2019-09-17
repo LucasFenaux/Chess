@@ -42,6 +42,13 @@ class Player:
             self.king.square.un_highlight()
             return False
 
+    def is_in_checkmate(self, is_simulated):
+        self.update_attackable_squares(is_simulated)
+        if len(self.attackable_squares) == 0:
+            return True
+        else:
+            return False
+
     def set_game(self, game, color):
         self.current_game_info["current game"] = game
         self.current_game_info["current color"] = color

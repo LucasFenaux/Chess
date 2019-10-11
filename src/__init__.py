@@ -4,6 +4,9 @@ import os
 import ctypes
 from RegularGame import RegularGame
 from Player import Player
+import arcade
+import arcade.sprite_list as sl
+import copy
 
 
 black = 0, 0, 0
@@ -19,9 +22,17 @@ def microsoft_set_up():
 
 
 def start_regular_game():
+    background_screen_size = microsoft_set_up()
+    arcade.open_window(width=background_screen_size[0], height=background_screen_size[1], window_title='TEST')
+    arcade.start_render()
+    image = sl.Sprite("../Display/Board.png")
+    image_batch = sl.SpriteList()
+    image_batch.append(image)
+    image_batch.draw()
+    arcade.finish_render()
+    arcade.run()
     pygame.init()
     pygame.font.init()
-    background_screen_size = microsoft_set_up()
     background_screen = pygame.display.set_mode(screen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
     background_screen.fill(black)
     screen = background_screen.copy()

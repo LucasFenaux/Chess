@@ -9,6 +9,7 @@ class Rook(Piece):
             self.image = pygame.image.load("../Display/Black Rook.png")
         else:
             self.image = pygame.image.load("../Display/White Rook.png")
+        self.has_moved = False
 
     def check_if_move_is_valid(self, new_square, game_orientation, is_simulated):
         new_loc = new_square.get_location()
@@ -47,3 +48,9 @@ class Rook(Piece):
                 return {"valid": False, "piece taken": None}
             else:
                 return {"valid": True, "piece taken": new_square.get_piece()}
+
+    def move(self, new_square, game_orientation):
+        moved = super().move(new_square, game_orientation)
+        if moved:
+            self.has_moved = True
+        return moved

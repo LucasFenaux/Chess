@@ -170,3 +170,11 @@ class RegularGame:
                 elif event.type == MOUSEBUTTONUP:
                     self.handle_end_game_click(False)
             self.display_end_game_screen(player)
+
+    def get_player(self, color):
+        if self.player1.get_current_color() == color:
+            return self.player1
+        elif self.player2.get_current_color() == color:
+            return self.player2
+        else:
+            return None

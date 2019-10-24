@@ -27,7 +27,7 @@ class King(Piece):
             if is_simulated:
                 return {"valid": True, "piece taken": None}
             else:
-                simulated_data = self.simulate_castle(new_square)
+                simulated_data = self.simulate_castle(new_square, special_move_metadata.get("rook", None))
                 if simulated_data.get("in check"):
                     return {"valid": False, "piece taken": None}
                 else:
@@ -53,11 +53,11 @@ class King(Piece):
         # can't castle if the king is in check
         player = self.board.game.get_player(self.color)
         if player.check_if_in_check(is_simulated):
-            return {"can_castle": False, "return": {"valid": False, "piece taken": None}}
+            return {"can_castle": False, "rook": None, "return": {"valid": False, "piece taken": None}}
 
         # can't castle if the king has already moved
         if self.has_moved:
-            return {"can_castle": False, "return": {"valid": False, "piece taken": None}}
+            return {"can_castle": False, "rook": None, "return": {"valid": False, "piece taken": None}}
 
         # can't castle if there is no rook at the right position and if that rook has already moved
         # finding all the rooks that haven't moved yet:
@@ -78,22 +78,30 @@ class King(Piece):
                 new_x, new_y = new_square.get_location()
                 if x2 < new_x < x1:
                     # check if the way in between is clear
-
-
-                    castlelable_rook = rook
-                    break
+                    is_clear = True
+                    for i in range(x2, x1):
+                        if grid[i][y].get_piece() is not None:
+                            is_clear = False
+                    if is_clear:
+                        castlelable_rook = rook
+                        break
         if castlelable_rook is None:
-            return {"can_castle": False, "return": {"valid": False, "piece taken": None}}
+            return {"can_castle": False, "rook": None, "return": {"valid": False, "piece taken": None}}
+        else:
+            return {"can_castle":True, "rook": castlelable_rook, "return": {"valid": True, "piece taken": None}}
 
 
     def move(self, new_square, game_orientation):
+        # check if move is a castle and if so move the rook involved before without using the move function
+        # while still updating its metadata to avoid the game thinking the turn is over for the player
         moved = super().move(new_square, game_orientation)
         if moved:
             self.has_moved = True
         return moved
 
-    def simulate_castle(self, new_square):
+    def simulate_castle(self, new_square, rook):
         new_loc = new_square.get_location()
         cur_square = self.square
         loc = cur_square.get_location()
         changes_made = []  # list of dictionaries that store what pieces were changed and what was their original position
+        # finish it, don't forget to simulate the move of the rook as well before checking for check

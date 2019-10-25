@@ -62,6 +62,9 @@ class Board(pygame.sprite.Sprite):
     def get_screen(self):
         return self.screen
 
+    def get_game(self):
+        return self.game
+
     def get_squares(self):
         all_squares = []
         for i in range(8):

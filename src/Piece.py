@@ -27,6 +27,7 @@ class Piece(pygame.sprite.Sprite):
         return {"valid": False, "piece taken": None}
 
     def simulate_move(self, new_square):
+        # get the locations and squares of all the pieces that are going to "move"
         new_loc = new_square.get_location()
         cur_square = self.square
         loc = cur_square.get_location()
@@ -35,13 +36,17 @@ class Piece(pygame.sprite.Sprite):
         changes_made.append({"square": cur_square, "original loc": loc})
         game = self.board.game
         grid = self.board.get_grid()
+
         # force the move by moving square around
         grid[new_loc[0]][new_loc[1]] = cur_square
-        cur_square.location = new_loc
+        cur_square.set_location(new_loc)
         filling_square = Square(self.board, loc, None)
         grid[loc[0]][loc[1]] = filling_square
         color = cur_square.get_piece().get_color()
+
         # check if the player is in check
+        # made a dictionary in case we want to add more metadata on the simulated move later
+        in_check = {"in check": True}
         if game.player1.get_current_color() == color:
             if game.player1.check_if_in_check(True):
                 in_check = {"in check": True}
@@ -52,10 +57,11 @@ class Piece(pygame.sprite.Sprite):
                 in_check = {"in check": True}
             else:
                 in_check = {"in check": False}
+
         # put everything back in its place
         for change in changes_made:
             square = change.get("square", None)
-            loc = change.get("original loc", [0, 0])
+            loc = change.get("original loc", (0, 0))
             square.location = loc
             grid[loc[0]][loc[1]] = square
 
@@ -64,11 +70,13 @@ class Piece(pygame.sprite.Sprite):
     def update_attackable_squares(self, is_simulated):
         attackable_squares = []
         grid = self.board.get_grid()
+
         for i in range(8):
             for j in range(8):
                 test_move = self.check_if_move_is_valid(grid[i][j], self.board.game.game_orientation, is_simulated)
                 if test_move.get("valid", False):
                     attackable_squares.append(grid[i][j])
+
         self.attackable_squares = attackable_squares
 
     def highlight_all_attackable_squares(self):

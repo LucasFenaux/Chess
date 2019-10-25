@@ -119,6 +119,8 @@ class RegularGame:
         self.display_game()
         self.board.update_board()
         self.display_game()
+        print("!!!!!!")
+
         while 1:
             if self.player1.is_in_checkmate(False):
                 player = self.player2
@@ -140,6 +142,7 @@ class RegularGame:
                     self.board.update_board()
                     self.display_game()
                 pygame.display.flip()
+
         print("{} won".format(player.name))
         self.end_game(player)
 

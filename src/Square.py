@@ -45,6 +45,9 @@ class Square(pygame.sprite.Sprite):
         if self.highlighted and self.highlight_color is not None:
             pygame.draw.rect(self.board.get_screen(), self.highlight_color, self.rect, 1)
 
+    def set_location(self, new_location):
+        self.location = new_location
+
     def get_piece(self):
         return self.piece
 

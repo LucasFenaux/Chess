@@ -23,8 +23,6 @@ class King(Piece):
             return {"valid": False, "piece taken": None}
 
         # check for castle
-        # TODO: the recursion now works but it doesn't seem to return that an actual castle is valid
-
         special_move_metadata = self.check_for_castle(new_square)
         if special_move_metadata.get("is_and_can_castle"):
             if is_simulated:
@@ -53,9 +51,10 @@ class King(Piece):
 
     def check_for_castle(self, new_square):
         grid = new_square.board.get_grid()
-
+        new_loc = new_square.get_location()
+        loc = self.square.get_location()
         # can't castle if the king has already moved
-        if self.has_moved:
+        if self.has_moved or (new_loc[1] != loc[1]) or (abs(new_loc[0] - loc[0]) != 2):
             return {"is_and_can_castle": False, "rook": None, "return": {"valid": False, "piece taken": None}}
 
         # can't castle if there is no rook at the right position and if that rook has already moved
@@ -64,7 +63,7 @@ class King(Piece):
         for i in range(8):
             for j in range(8):
                 piece = grid[i][j].get_piece()
-                if type(piece) == Rook and not piece.has_moved:
+                if type(piece) == Rook and not piece.has_moved and piece.color == self.color:
                     rooks.append(piece)
         x, y = self.square.get_location()
 
@@ -76,16 +75,12 @@ class King(Piece):
                 x1 = max(rx, x)
                 x2 = min(rx, x)
                 new_x, new_y = new_square.get_location()
-
-                # move is not valid if the king moves more than 2 tiles
-                if x2 < new_x < x1 and x1 - x2 == 2:
+                if x2 < new_x < x1:
                     # check if the way in between is clear
                     is_clear = True
-
-                    for i in range(x2, x1):
+                    for i in range(x2 + 1, x1):
                         if grid[i][y].get_piece() is not None:
                             is_clear = False
-
                     if is_clear:
                         castlelable_rook = rook
                         break
@@ -96,25 +91,37 @@ class King(Piece):
             return {"is_and_can_castle": True, "rook": castlelable_rook, "return": {"valid": True, "piece taken": None}}
 
     def move(self, new_square, game_orientation):
+        grid = self.board.get_grid()
         test_move = self.check_if_move_is_valid(new_square, game_orientation, False)
+
         if test_move["valid"]:
+
             # check if the move is a castle, if so force move the rook
             check_castle = self.check_for_castle(new_square)
             if check_castle.get("is_and_can_castle"):
                 # compute the new location of the rook
                 rook = check_castle.get("rook")
                 rook_loc = rook.get_square().get_location()
-                loc = self.location
+                print("rook_loc", rook_loc)
+                loc = self.square.get_location()
+                print("loc", loc)
                 new_loc = new_square.get_location()
-                new_rook_loc = (0, 0)
-                if rook_loc[1] > loc[1]:
+                print("new loc", new_loc)
+                if rook_loc[0] > loc[0]:
                     new_rook_loc = (new_loc[0] - 1, new_loc[1])
                 else:
                     new_rook_loc = (new_loc[0] + 1, new_loc[1])
-                rook.update_location(new_rook_loc)
 
-            self.board.handle_piece_taken(test_move.get("piece taken", None))
-            self.update_location(new_square)
+                # move the king
+                self.board.handle_piece_taken(test_move.get("piece taken", None))
+                self.update_location(new_square)
+
+                # move the rook
+                rook.update_location(grid[new_rook_loc[0]][new_rook_loc[1]])
+                print("new rook loc", new_rook_loc)
+            else:
+                self.board.handle_piece_taken(test_move.get("piece taken", None))
+                self.update_location(new_square)
             moved = True
         else:
             moved = False
@@ -127,6 +134,15 @@ class King(Piece):
         # get objects we will need later
         game = self.board.get_game()
         grid = self.board.get_grid()
+        color = self.square.get_piece().get_color()
+
+        # first off, check that the king is not already in check, and if so, we can't castle
+        if game.player1.get_current_color() == color:
+            if game.player1.check_if_in_check(True):
+                return {"in check": True}
+        else:
+            if game.player2.check_if_in_check(True):
+                return {"in check": True}
 
         # get the locations and squares of all the pieces that are going to "move"
         new_loc = new_square.get_location()
@@ -163,7 +179,6 @@ class King(Piece):
         grid[rook_loc[0]][rook_loc[1]] = rook_filling_square
 
         # check if the player is in check
-        color = cur_square.get_piece().get_color()
         # made a dictionary in case we want to add more metadata on the simulated move later
         in_check = {"in check": True}
         if game.player1.get_current_color() == color:

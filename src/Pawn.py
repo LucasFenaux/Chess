@@ -282,8 +282,6 @@ class Pawn(Piece):
             return in_check
 
     def move(self, new_square, game_orientation):
-        print(self.square.get_location())
-        print(new_square.get_location())
         moved = super().move(new_square, game_orientation)
         if moved:
             self.has_moved = True

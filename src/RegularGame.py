@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import time
 import random
 from Board import Board
 from PieceFactory import PieceFactory
@@ -18,6 +19,8 @@ class RegularGame:
         self.game_orientation = ""
         self.player1 = player1
         self.player2 = player2
+        self.end_game_sprite = None
+        self.end_game_screen = pygame.display.set_mode(screen.get_size(), HWSURFACE | DOUBLEBUF | RESIZABLE)
 
     def display_game(self):
         self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
@@ -116,7 +119,7 @@ class RegularGame:
 
     def start(self):
         self.populate_game()
-        self.display_game()
+        # self.display_game()
         self.board.update_board()
         self.display_game()
 
@@ -130,6 +133,7 @@ class RegularGame:
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        pygame.quit()
                         sys.exit()
                     elif event.type == VIDEORESIZE:
                         new_size = event.dict['size']
@@ -146,19 +150,25 @@ class RegularGame:
         self.end_game(player)
 
     def display_end_game_screen(self, player):
-        end_game_font = pygame.font.SysFont('Comic Sans MS', 30)
-        text_screen = end_game_font.render(
-            '{} won! Congratulations! He has {} consecutive wins'.format(player.name, player.num_of_wins), False,
-            (0, 0, 0))
-        screen = self.board.screen
-        size = screen.get_size()
-        self.background_screen.blit(pygame.transform.scale(self.board.screen, self.background_screen.get_size()),
+        # end_game_font = pygame.font.SysFont('Comic Sans MS', 30)
+        # text_screen = end_game_font.render(
+        #     '{} won! Congratulations! He has {} consecutive wins'.format(player.name, player.num_of_wins), False,
+        #     (0, 0, 0))
+        # screen = self.board.screen
+        # size = screen.get_size()
+        self.end_game_screen.blit(self.end_game_sprite, (0, 0))
+        self.background_screen.blit(pygame.transform.scale(self.end_game_screen, self.background_screen.get_size()),
                                     (0, 0))
 
     def handle_end_game_click(self, is_down):
         pass
 
     def end_game(self, player):
+        player.num_of_wins += 1
+        pygame.image.save(self.background_screen, "../Display/end_game_screen.png")
+        time.sleep(0.5)
+        self.end_game_sprite = pygame.image.load("../Display/end_game_screen.png")
+
         while 1:
             self.display_end_game_screen(player)
             for event in pygame.event.get():

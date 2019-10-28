@@ -58,8 +58,8 @@ class Pawn(Piece):
 
             elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] + 1):
                 # take a diagonal piece
-                # first check if it an en-passant
                 if new_square.get_piece() is None:
+                    # check for en-passant
                     piece = grid[loc[0] + 1][loc[1]].get_piece()
                     if type(piece) == Pawn and piece.get_color() != self.color:
                         latest_move = self.board.get_game().get_player(piece.get_color()).get_current_latest_move()
@@ -94,6 +94,7 @@ class Pawn(Piece):
             elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] + 1):
                 # take a diagonal piece
                 if new_square.get_piece() is None:
+                    # check for en-passant
                     piece = grid[loc[0] - 1][loc[1]].get_piece()
                     if type(piece) == Pawn and piece.get_color() != self.color:
                         latest_move = self.board.get_game().get_player(piece.get_color()).get_current_latest_move()
@@ -162,6 +163,7 @@ class Pawn(Piece):
             elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] - 1):
                 # take a diagonal piece
                 if new_square.get_piece() is None:
+                    # check for en-passant
                     piece = grid[loc[0] - 1][loc[1]].get_piece()
                     if type(piece) == Pawn and piece.get_color() != self.color:
                         latest_move = self.board.get_game().get_player(piece.get_color()).get_current_latest_move()
@@ -195,24 +197,24 @@ class Pawn(Piece):
             elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] - 1):
                 # take a diagonal piece
                 if new_square.get_piece() is None:
-                    if new_square.get_piece() is None:
-                        piece = grid[loc[0] + 1][loc[1]].get_piece()
-                        if type(piece) == Pawn and piece.get_color() != self.color:
-                            latest_move = self.board.get_game().get_player(piece.get_color()).get_current_latest_move()
-                            # check if the last piece that the other player moved was the piece we got
-                            if latest_move[1].get_piece() == piece:
-                                lm_loc = latest_move[0].get_location()
-                                lm_new_loc = latest_move[1].get_location()
-                                # check if it moved 2 squares
-                                if (lm_new_loc[0], lm_new_loc[1]) == (lm_loc[0], lm_loc[1] + 2):
-                                    if is_simulated:
-                                        return {"valid": True, "piece taken": piece}
+                    # check for en-passant
+                    piece = grid[loc[0] + 1][loc[1]].get_piece()
+                    if type(piece) == Pawn and piece.get_color() != self.color:
+                        latest_move = self.board.get_game().get_player(piece.get_color()).get_current_latest_move()
+                        # check if the last piece that the other player moved was the piece we got
+                        if latest_move[1].get_piece() == piece:
+                            lm_loc = latest_move[0].get_location()
+                            lm_new_loc = latest_move[1].get_location()
+                            # check if it moved 2 squares
+                            if (lm_new_loc[0], lm_new_loc[1]) == (lm_loc[0], lm_loc[1] + 2):
+                                if is_simulated:
+                                    return {"valid": True, "piece taken": piece}
+                                else:
+                                    simulated_data = self.simulate_move(new_square, {"is_ep": True, "piece": piece})
+                                    if simulated_data.get("in check"):
+                                        return {"valid": False, "piece taken": None}
                                     else:
-                                        simulated_data = self.simulate_move(new_square, {"is_ep": True, "piece": piece})
-                                        if simulated_data.get("in check"):
-                                            return {"valid": False, "piece taken": None}
-                                        else:
-                                            return {"valid": True, "piece taken": piece}
+                                        return {"valid": True, "piece taken": piece}
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color2:
                     return {"valid": False, "piece taken": None}

@@ -95,6 +95,7 @@ class Piece(pygame.sprite.Sprite):
         test_move = self.check_if_move_is_valid(new_square, game_orientation, False)
         if test_move["valid"]:
             self.board.handle_piece_taken(test_move.get("piece taken", None))
+            self.board.update_latest_move(self.color, self.square, new_square)
             self.update_location(new_square)
             return True
         else:

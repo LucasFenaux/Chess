@@ -21,8 +21,10 @@ class Pawn(Piece):
         new_loc = new_square.get_location()
         loc = self.square.get_location()
         grid = self.board.get_grid()
+
         if self.color == color1:
-            if (new_loc[0], new_loc[1]) == (loc[0], loc[1] + 1):  # move forward by 1 square
+            if (new_loc[0], new_loc[1]) == (loc[0], loc[1] + 1):
+                # move forward by 1 square
                 if new_square.get_piece() is None:
                     if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
@@ -34,8 +36,9 @@ class Pawn(Piece):
                             return {"valid": True, "piece taken": new_square.get_piece()}
                 else:
                     return {"valid": False, "piece taken": None}
-            elif (new_loc[0], new_loc[1]) == (
-                    loc[0], loc[1] + 2):  # move forward by 2 squares if the pawn hasn't moved yet
+
+            elif (new_loc[0], new_loc[1]) == (loc[0], loc[1] + 2):
+                # move forward by 2 squares if the pawn hasn't moved yet
                 if self.has_moved:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece() is not None:
@@ -51,7 +54,9 @@ class Pawn(Piece):
                             return {"valid": False, "piece taken": None}
                         else:
                             return {"valid": True, "piece taken": new_square.get_piece()}
-            elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] + 1):  # take a diagonal piece
+
+            elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] + 1):
+                # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color1:
@@ -65,7 +70,9 @@ class Pawn(Piece):
                             return {"valid": False, "piece taken": None}
                         else:
                             return {"valid": True, "piece taken": new_square.get_piece()}
-            elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] + 1):  # take a diagonal piece
+
+            elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] + 1):
+                # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color1:
@@ -82,7 +89,9 @@ class Pawn(Piece):
             else:
                 return {"valid": False, "piece taken": None}
         else:
-            if (new_loc[0], new_loc[1]) == (loc[0], loc[1] - 1):  # move forward by 1 square
+
+            if (new_loc[0], new_loc[1]) == (loc[0], loc[1] - 1):
+                # move forward by 1 square
                 if new_square.get_piece() is None:
                     if is_simulated:
                         return {"valid": True, "piece taken": new_square.get_piece()}
@@ -94,8 +103,9 @@ class Pawn(Piece):
                             return {"valid": True, "piece taken": new_square.get_piece()}
                 else:
                     return {"valid": False, "piece taken": None}
-            elif (new_loc[0], new_loc[1]) == (
-                    loc[0], loc[1] - 2):  # move forward by 2 squares if the pawn hasn't moved yet
+
+            elif (new_loc[0], new_loc[1]) == (loc[0], loc[1] - 2):
+                # move forward by 2 squares if the pawn hasn't moved yet
                 if self.has_moved:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece() is not None:
@@ -111,7 +121,9 @@ class Pawn(Piece):
                             return {"valid": False, "piece taken": None}
                         else:
                             return {"valid": True, "piece taken": new_square.get_piece()}
-            elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] - 1):  # take a diagonal piece
+
+            elif (new_loc[0], new_loc[1]) == (loc[0] - 1, loc[1] - 1):
+                # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color2:
@@ -125,7 +137,9 @@ class Pawn(Piece):
                             return {"valid": False, "piece taken": None}
                         else:
                             return {"valid": True, "piece taken": new_square.get_piece()}
-            elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] - 1):  # take a diagonal piece
+
+            elif (new_loc[0], new_loc[1]) == (loc[0] + 1, loc[1] - 1):
+                # take a diagonal piece
                 if new_square.get_piece() is None:
                     return {"valid": False, "piece taken": None}
                 elif new_square.get_piece().get_color() == color2:

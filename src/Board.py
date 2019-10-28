@@ -48,6 +48,10 @@ class Board(pygame.sprite.Sprite):
                 grid[i][j] = Square(self, [i, j], None)
         return grid
 
+    def update_latest_move(self, player_color, initial_square, new_square):
+        player = self.game.get_player(player_color)
+        player.set_current_latest_move((initial_square, new_square))
+
     def handle_piece_taken(self, piece):
         if piece is not None:
             self.game.take_piece(piece)

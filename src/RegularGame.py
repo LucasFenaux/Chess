@@ -119,7 +119,6 @@ class RegularGame:
         self.display_game()
         self.board.update_board()
         self.display_game()
-        print("!!!!!!")
 
         while 1:
             if self.player1.is_in_checkmate(False):

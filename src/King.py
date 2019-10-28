@@ -113,6 +113,7 @@ class King(Piece):
                     new_rook_loc = (new_loc[0] + 1, new_loc[1])
 
                 # move the king
+                self.board.update_latest_move(self.color, self.square, new_square)
                 self.board.handle_piece_taken(test_move.get("piece taken", None))
                 self.update_location(new_square)
 
@@ -120,6 +121,7 @@ class King(Piece):
                 rook.update_location(grid[new_rook_loc[0]][new_rook_loc[1]])
                 print("new rook loc", new_rook_loc)
             else:
+                self.board.update_latest_move(self.color, self.square, new_square)
                 self.board.handle_piece_taken(test_move.get("piece taken", None))
                 self.update_location(new_square)
             moved = True

@@ -3,7 +3,7 @@
 class Player:
     def __init__(self, name):
         self.name = name
-        self.current_game_info = {"current game": None, "current color": "", "pieces taken": []}
+        self.current_game_info = {"current game": None, "current color": "", "latest move": (None, None), "pieces taken": []}
         self.num_of_wins = 0
         self.attackable_squares = []
         self.king = None  # a pointer to the player's king piece
@@ -54,6 +54,9 @@ class Player:
         self.current_game_info["current color"] = color
         self.current_game_info["pieces taken"] = []
 
+    def set_current_latest_move(self, new_latest_move):
+        self.current_game_info["latest move"] = new_latest_move
+
     def winner(self):
         self.num_of_wins += 1
 
@@ -65,6 +68,9 @@ class Player:
 
     def get_current_color(self):
         return self.current_game_info.get("current color", "")
+
+    def get_current_latest_move(self):
+        return self.current_game_info.get("latest move", (None, None))
 
     def get_current_pieces_taken(self):
         return self.current_game_info.get("pieces taken", [])

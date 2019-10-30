@@ -63,6 +63,9 @@ class Player:
     def take_piece(self, piece):
         self.current_game_info.get("pieces taken", []).append(piece)
 
+    def get_name(self):
+        return self.name
+
     def get_current_game(self):
         return self.current_game_info.get("current game", None)
 

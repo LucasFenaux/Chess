@@ -29,7 +29,7 @@ def start_regular_game():
     player1 = Player("player1")
     player2 = Player("player2")
     game = RegularGame(background_screen, screen, player1, player2)
-    game.start()
+    game.start(0)
 
 
 if __name__ == '__main__':

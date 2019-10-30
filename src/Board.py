@@ -48,6 +48,10 @@ class Board(pygame.sprite.Sprite):
                 grid[i][j] = Square(self, [i, j], None)
         return grid
 
+    def cleanup_board(self):
+        new_grid = self.fill_grid_with_empty_squares()
+        self.grid = new_grid
+
     def update_latest_move(self, player_color, initial_square, new_square):
         player = self.game.get_player(player_color)
         player.set_current_latest_move((initial_square, new_square))

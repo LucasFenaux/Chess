@@ -20,6 +20,7 @@ class RegularGame:
         self.game_orientation = ""
         self.player1 = player1
         self.player2 = player2
+        self.display_player_names = True
         self.end_game_data = {"replay_rect": None, "menu_rect": None}
         self.end_game_sprite = None
         self.end_game_screen = pygame.Surface(self.board.get_screen().get_size(), HWSURFACE | DOUBLEBUF | RESIZABLE)
@@ -126,10 +127,6 @@ class RegularGame:
         self.board.update_board()
         self.display_game()
 
-        # display the name of each of the players then remove them after the first click
-        # so that they know where they are
-        self.display_names_at_start()
-
         # have the game start
         while 1:
             if self.player1.is_in_checkmate(False):
@@ -148,9 +145,12 @@ class RegularGame:
                         self.update_background_size(new_size)
                     elif event.type == MOUSEBUTTONDOWN:
                         self.handle_click(True)
+                        self.display_player_names = False
                     elif event.type == MOUSEBUTTONUP:
                         self.handle_click(False)
                     self.board.update_board()
+                    if self.display_player_names:
+                        self.display_names()
                     self.display_game()
                 pygame.display.flip()
 
@@ -163,6 +163,7 @@ class RegularGame:
         # cleanup the board
         self.board.cleanup_board()
         self.state = 0
+        self.display_player_names = True
         self.turn = "white"
         if self.current_order == 0:
             self.current_order = 1
@@ -246,7 +247,7 @@ class RegularGame:
                                     (0, 0))
         pygame.display.flip()
 
-    def handle_end_game_click(self, is_down):
+    def handle_end_game_click(self):
         pos = pygame.mouse.get_pos()
         scaled_pos = (int(pos[0] * self.scale[0]), int(pos[1] * self.scale[1]))
         selected = None
@@ -282,43 +283,27 @@ class RegularGame:
                     new_size = event.dict['size']
                     self.update_background_size(new_size)
                 elif event.type == MOUSEBUTTONDOWN:
-                    self.handle_end_game_click(True)
+                    self.handle_end_game_click()
                 elif event.type == MOUSEBUTTONUP:
-                    self.handle_end_game_click(False)
+                    self.handle_end_game_click()
                 pygame.display.flip()
             self.display_end_game_screen(player)
 
-    def display_names_at_start(self):
+    def display_names(self):
         name_font = pygame.font.SysFont('Comic Sans MS', 30)
-        screen_size = self.end_game_screen.get_size()
-
+        screen_size = self.board.screen.get_size()
         player1_text = name_font.render(
             " {} ".format(self.player1.get_name()), False, (0, 0, 0))
         player1_rect = player1_text.get_rect()
-        player1_rect.center = (screen_size[0] // 2, screen_size[1] - player1_rect.size[1] - (9*screen_size[1]) // 10)
+        player1_rect.center = (screen_size[0] // 2, screen_size[1] - player1_rect.size[1] - (2*screen_size[1]) // 8)
 
         player2_text = name_font.render(
             " {} ".format(self.player2.get_name()), False, (0, 0, 0))
         player2_rect = player2_text.get_rect()
-        player2_rect.center = (screen_size[0] // 2, screen_size[1] + player2_rect.size[1] - (screen_size[1] // 10))
+        player2_rect.center = (screen_size[0] // 2, screen_size[1] + player2_rect.size[1] - (6*screen_size[1]) // 8)
         screen = self.board.get_screen()
-
-        while 1:
-            self.board.update_board()
-            screen.blit(player1_text, player1_rect)
-            screen.blit(player2_text, player2_rect)
-            self.display_game()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == VIDEORESIZE:
-                    new_size = event.dict['size']
-                    self.update_background_size(new_size)
-                elif event.type == MOUSEBUTTONDOWN:
-                    return
-                elif event.type == MOUSEBUTTONUP:
-                    return
+        screen.blit(player1_text, player1_rect)
+        screen.blit(player2_text, player2_rect)
 
     def get_player(self, color):
         if self.player1.get_current_color() == color:
